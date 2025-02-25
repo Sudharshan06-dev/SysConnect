@@ -1,6 +1,6 @@
 from enum import Enum
 
-SECRET_KEY = "dd4005a7c2fee0352b7268cedcf9e36dcadc11d57bf77974875a21e108fb5277"
+SECRET_KEY = "123456789463543"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 60 * 60
 
@@ -36,14 +36,3 @@ class TranscriptRequestStatus(Enum):
     PROCESSING = 'PROCESSING',
     COMPLETED = 'COMPLETED',
     REJECTED = 'REJECTED'
-
-'''
-class DegreeType(Enum):
-#     FRESHMAN = 'FRESHMAN',
-#     SOPHOMORE = 'SOPHOMORE', 
-#     JUNIOR = 'JUNIOR', 
-#     SENIOR = 'SENIOR', 
-#     UNDERGRADUATE = 'UNDERGRADUATE', 
-#     GRADUATE = 'GRADUATE', 
-#     POSTGRADUATE = 'POSTGRADUATE'
-'''
