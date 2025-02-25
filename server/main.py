@@ -1,17 +1,25 @@
-from fastapi import FastAPI, HTTPException, Depends,status
+from fastapi import FastAPI, HTTPException, Depends,status, Request, Response
 from database import engine
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from models import UserModel, UserTokenModel, Base
+from models import UserTokenModel, Base
 from database import get_db
-from auth import authenticate_user, create_access_token, get_hashed_password, get_current_user, oauth2_scheme
-from schemas import UserCreateRequest, UserResponse
-from UserMiddleware import UserMiddleware
+from auth import authenticate_user, create_access_token, oauth2_scheme
+from schemas import UserResponse, UserLoginResponse, DefaultResponse
+from UserMiddleware import my_middleware
+from login import router as login_router
+from context_vars import user_id_ctx
+
 
 #Instantiate the fastapi app
 app = FastAPI()
 
-app.add_middleware(UserMiddleware)
+# Custom Middleware
+app.middleware('http')(my_middleware)
+
+#Add all the routes for the application
+app.include_router(login_router)
+
 
 #Spin up all the models that is needed to be created
 Base.metadata.create_all(bind=engine)
@@ -20,12 +28,10 @@ Base.metadata.create_all(bind=engine)
 async def root():
     return {"message": "API is running"}
 
-@app.post("/token")
+@app.post("/token", response_model= UserLoginResponse)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
 
     user = authenticate_user(form_data.username, form_data.password, db)
-
-    print('access_token', user)
     
     if not user:
         raise HTTPException(
@@ -45,45 +51,17 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     db.commit()
     db.refresh(update_user_token)
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user": UserResponse.model_validate(user)
-    }
+    return UserLoginResponse(access_token=access_token, user=UserResponse.model_validate(user))
 
-@app.post("/create-user", response_model=UserResponse)
-async def create_user(user_data: UserCreateRequest, db: Session = Depends(get_db),):
-
-    hashed_password = get_hashed_password(user_data.password)
-
-    db_user = UserModel(
-        firstname=user_data.firstname,
-        lastname=user_data.lastname,
-        email=user_data.email,
-        username=user_data.username,
-        hashed_password=hashed_password,
-        role=user_data.role,
-    )
-
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-
-    return UserResponse.model_validate(db_user)
-
-@app.get("/current-user", response_model=UserResponse)
-async def get_current_user_route(current_user: UserResponse = Depends(get_current_user)):
-    return current_user
-
-@app.post("/logout")
-async def logout(token: str = Depends(oauth2_scheme), current_user: UserResponse = Depends(get_current_user), db: Session = Depends(get_db)):
+@app.post("/logout", response_model=DefaultResponse)
+async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     
-    token_entry = db.query(UserTokenModel).filter(UserTokenModel.user_token == token and UserTokenModel.user_id == current_user.user_id).first()
+    token_entry = await db.query(UserTokenModel).filter(UserTokenModel.user_token == token.access_token and UserTokenModel.user_id == user_id_ctx.get()).first()
 
     if token_entry:
         token_entry.is_revoked = True
     
     db.commit()
 
-    return {"detail": "Successfully logged out and token revoked"}
+    return DefaultResponse(title="Success", message="Successfully logged out and token revoked")
 
