@@ -1,24 +1,30 @@
-from fastapi import FastAPI, HTTPException, Depends,status, Request, Response
-from database import engine
+from fastapi import FastAPI, HTTPException, Depends,status, Response
+from core.database import engine
 from sqlalchemy.orm import Session
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
-from models import UserTokenModel, Base
-from database import get_db
-from auth import authenticate_user, create_access_token, oauth2_scheme
-from schemas import UserResponse, UserLoginResponse, DefaultResponse
-from UserMiddleware import my_middleware
+from core.models import UserTokenModel, Base
+from core.database import get_db
+from core.auth import authenticate_user, create_access_token, oauth2_scheme
+from core.schemas import UserResponse, UserLoginResponse, DefaultResponse
+from core.user_middleware import user_middleware
 from login import router as login_router
-from context_vars import user_id_ctx
-
+from admin import admin_router, AdminMiddleware as admin_middleware
+from core.context_vars import user_id_ctx
 
 #Instantiate the fastapi app
 app = FastAPI()
 
+routers = [login_router, admin_router]
+middlewares = [user_middleware, admin_middleware]
+
 # Custom Middleware
-app.middleware('http')(my_middleware)
+app.add_middleware(BaseHTTPMiddleware, dispatch=user_middleware)
+#app.add_middleware(admin_middleware)
 
 #Add all the routes for the application
-app.include_router(login_router)
+for app_router in routers:
+    app.include_router(app_router)
 
 
 #Spin up all the models that is needed to be created
@@ -56,7 +62,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 @app.post("/logout", response_model=DefaultResponse)
 async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     
-    token_entry = await db.query(UserTokenModel).filter(UserTokenModel.user_token == token.access_token and UserTokenModel.user_id == user_id_ctx.get()).first()
+    token_entry = await db.query(UserTokenModel).filter(UserTokenModel.user_token == token.access_token and UserTokenModel.user_id == user_id_ctx.get('user_id')).first()
 
     if token_entry:
         token_entry.is_revoked = True

@@ -1,5 +1,6 @@
-from pydantic import BaseModel
-from constants import RoleType
+from pydantic import BaseModel, EmailStr
+from core.constants import RoleType, ApplicationStatus
+from typing import List
 
 # BaseModel => This is from Pydantic not from the database.py file
 # from_attributes = True => Allows Pydantic models to map attributes directly from SQLAlchemy models.
@@ -12,6 +13,18 @@ class DefaultResponse(BaseModel):
 
 
 # User Login Data
+class ApplicationResponse(BaseModel):
+    application_id: int
+    firstname: str
+    lastname: str
+    email: str
+    status: ApplicationStatus
+    reference_number:str
+    username: str
+
+    class Config:
+        from_attributes  = True
+
 class UserResponse(BaseModel):
     user_id: int
     firstname: str
@@ -38,3 +51,10 @@ class CreateUserRequest(BaseModel):
     password: str
     username: str
     role: RoleType
+
+class ApproveRequest(BaseModel):
+    email: EmailStr
+
+class BulkApproveRequest(BaseModel):
+    application_id: int
+    emails: EmailStr

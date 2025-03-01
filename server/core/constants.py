@@ -1,8 +1,9 @@
 from enum import Enum
 
-SECRET_KEY = "123456789463543"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 60 * 60
+
+SUCCESS = "Success"
+
+ERROR = "Error"
 
 
 #Enum Types
@@ -15,6 +16,10 @@ class RoleTypeWithAdmin(Enum):
     PROFESSOR = 'PROFESSOR'
     ADMIN = 'ADMIN'
 
+class ApplicationStatus(str, Enum):
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
 
 class DegreeType(Enum):
     BACHELORS = 'BACHELORS', 

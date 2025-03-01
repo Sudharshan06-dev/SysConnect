@@ -1,7 +1,8 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column, Integer, String, DateTime, event, Enum, ForeignKey
-from database import Base
-from constants import RoleTypeWithAdmin, DegreeType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod
+from sqlalchemy import Boolean, Column, Integer, String, DateTime, Enum, ForeignKey
+from core.database import Base
+from uuid import uuid4
+from core.constants import RoleType, RoleTypeWithAdmin, DegreeType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod, ApplicationStatus
 
 class BaseModel(Base):
     __abstract__ = True  # Ensures this class is not treated as a table
@@ -18,6 +19,20 @@ class UserTokenModel(Base):
     user_id = Column(Integer, index=True)
     user_token = Column(String(255), unique=True)
     is_revoked = Column(Boolean, unique=False, default=False)
+
+class ApplicationModel(BaseModel):
+    __tablename__ = 'applications'
+
+    application_id = Column(Integer, primary_key=True, index=True)
+    firstname = Column(String(100))
+    lastname = Column(String(100))
+    reference_number = Column(String(100), default=uuid4())
+    email = Column(String(256), unique=True, index=True)
+    username = Column(String(100), unique=True)
+    hashed_password = Column(String(256))
+    role = Column(Enum(RoleType), nullable=False)
+    application_status = Column(Enum(ApplicationStatus), default=ApplicationStatus.PENDING, nullable=False)
+
 
 class UserModel(BaseModel):
     __tablename__ = 'users'

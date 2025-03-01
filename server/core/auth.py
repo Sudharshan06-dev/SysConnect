@@ -1,15 +1,15 @@
 from fastapi import HTTPException, Depends
-from database import get_db
+from core.database import get_db
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, timezone
-from models import UserModel
+from core.models import UserModel
 from typing import Optional
-from constants import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-from schemas import UserResponse
+from core.schemas import UserResponse
 import jwt
+from core.envs import Envs
 
 #Add all the contexts and dependecies need to be used
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -32,15 +32,15 @@ def authenticate_user(username: str, password: str, db: Session) -> Optional[Use
         return None
     return user
 
-def create_access_token(data: dict, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
+def create_access_token(data: dict, expires_delta=timedelta(minutes=Envs.AUTH_EXPIRATION)):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, Envs.AUTH_SECRET_KEY, algorithm=Envs.AUTH_ALGORITHM)
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> UserResponse:
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, Envs.AUTH_SECRET_KEY, algorithms=[Envs.AUTH_ALGORITHM])
 
         username: str = payload.get("sub")
         if username is None:

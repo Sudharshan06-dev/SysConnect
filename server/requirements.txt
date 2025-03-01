@@ -1,10 +1,10 @@
 fastapi
 uvicorn
-sqlmodel
 sqlalchemy
 pymysql
 pydantic
 passlib
 pyjwt
 bcrypt
+fastapi-mail
 python-multipart
