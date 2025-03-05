@@ -11,6 +11,9 @@ from core.user_middleware import user_middleware
 from login import router as login_router
 from admin import admin_router, AdminMiddleware as admin_middleware
 from core.context_vars import user_id_ctx
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 #Instantiate the fastapi app
 app = FastAPI()
@@ -30,9 +33,15 @@ for app_router in routers:
 #Spin up all the models that is needed to be created
 Base.metadata.create_all(bind=engine)
 
+# Mount the 'client' directory to serve static files
+app.mount("/static", StaticFiles(directory="../client/src/app/homepage"), name="static")
 @app.get("/")
 async def root():
-    return {"message": "API is running"}
+    return FileResponse("../client/src/app/homepage/homepage.component.html")
+# Serve the signup.html when navigating to /signup
+@app.get("/signup")
+def read_signup():
+    return FileResponse("../client/src/app/homepage/signup.html")
 
 @app.post("/token", response_model= UserLoginResponse)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
