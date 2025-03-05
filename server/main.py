@@ -1,10 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends,status, Response
-from core.database import engine
+from config.database import engine, get_db
 from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from core.models import UserTokenModel, Base
-from core.database import get_db
 from core.auth import authenticate_user, create_access_token, oauth2_scheme
 from core.schemas import UserResponse, UserLoginResponse, DefaultResponse
 from core.user_middleware import user_middleware
@@ -57,7 +56,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     db.commit()
     db.refresh(update_user_token)
 
-    return UserLoginResponse(access_token=access_token, user=UserResponse.model_validate(user))
+    return UserLoginResponse(access_token=access_token, user=user)
 
 @app.post("/logout", response_model=DefaultResponse)
 async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

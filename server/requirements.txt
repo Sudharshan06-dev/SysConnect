@@ -5,6 +5,7 @@ pymysql
 pydantic
 passlib
 pyjwt
+neo4j
 bcrypt
 fastapi-mail
 python-multipart

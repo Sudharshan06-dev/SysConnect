@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from typing import List
 from core.schemas import ApproveRequest, BulkApproveRequest, ApplicationResponse
-from core.auth import get_db, get_current_user
+from config.database import get_db
+from core.auth import get_current_user
 from core.constants import ApplicationStatus, SUCCESS, ERROR
 from core.models import ApplicationModel, UserModel
 from core.email_sender import sendEmail
@@ -12,6 +13,8 @@ import logging
 import asyncio
 
 logger = logging.getLogger(__name__)
+
+#Schedule based on professors, courses. Courses should not overlap for the professors, 
 
 application_router = APIRouter(prefix='/application')
 
@@ -34,7 +37,7 @@ async def approve_user(
             application_data = await _update_application_status(user_type, application_id, ApplicationStatus.APPROVED, db)
 
             if not application_data:
-                raise HTTPException(status_code=422, detail="Approval failed.")
+                return create_response(422, "approve_user", ERROR)
 
             await _create_user(application_data, db)
             return create_response(200, "approve_user", SUCCESS)

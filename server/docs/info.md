@@ -11,6 +11,7 @@ This creates a new FastAPI application instance.
 engine = create_engine(URL_DATABASE)
 ```
 Sets up a connection to the database using SQLAlchemy.
+SQLAlchemy ORM queries are synchronous
 
 ## 3. Create a Session Factory
 ```python

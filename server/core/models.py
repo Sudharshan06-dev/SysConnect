@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, Enum, ForeignKey
-from core.database import Base
+from config.database import Base
 from uuid import uuid4
-from core.constants import RoleType, RoleTypeWithAdmin, DegreeType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod, ApplicationStatus
+from core.constants import RoleType, RoleTypeWithAdmin, DegreeType, CourseType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod, ApplicationStatus, MajorType
 
 class BaseModel(Base):
     __abstract__ = True  # Ensures this class is not treated as a table
@@ -75,9 +75,11 @@ class CoursesModel(BaseModel):
     __tablename__ = 'courses'
 
     course_id = Column(Integer, primary_key=True, autoincrement=True)
+    course_number = Column(String(100), nullable=False)
     course_name = Column(String(100), nullable=False)
+    course_type = Column(Enum(CourseType), default='CORE', nullable=False)
     course_for = Column(Enum(DegreeType), nullable=False)
-    major = Column(String(100), nullable=False)
+    major = Column(Enum(MajorType), nullable=False)
     credits = Column(Integer, nullable=False)
     
 # Course Prerequisites Mapping: Defines prerequisite relationships between courses to enforce enrollment rules.

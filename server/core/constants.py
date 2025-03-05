@@ -22,22 +22,40 @@ class ApplicationStatus(str, Enum):
     REJECTED = "REJECTED"
 
 class DegreeType(Enum):
-    BACHELORS = 'BACHELORS', 
-    GRADUATE = 'GRADUATE', 
-    POSTGRADUATE = 'POSTGRADUATE'
+    BACHELORS = 'BACHELORS'
+    MASTERS = 'MASTERS'
+    POSTDOCTORATE = 'POSTDOCTORATE'
+
+class CourseType(Enum):
+    CORE = 'CORE'
+    ELECTIVE = 'ELECTIVE'
+
+class MajorPrefix(Enum):
+    COMPUTER_SCIENCE = 'CPSC'
+    SOFTWARE_ENGINEERING = 'SW'
+    MECHANICAL = 'MECH'
+    CIVIL = 'CVL'
+    ELECTRICAL = 'EEE'
+
+class MajorType(Enum):
+    COMPUTER_SCIENCE = 'COMPUTER_SCIENCE'
+    SOFTWARE_ENGINEERING = 'SOFTWARE_ENGINEERING'
+    MECHANICAL = 'MECHANICAL'
+    CIVIL = 'CIVIL'
+    ELECTRICAL = 'ELECTRICAL'
 
 class CourseEnrollmentStatus(Enum):
-    ENROLLED = 'ENROLLED',
-    COMPLETED = 'COMPLETED',
+    ENROLLED = 'ENROLLED'
+    COMPLETED = 'COMPLETED'
     DROPPED = 'DROPPED'
 
 class DeliveryMethod(Enum):
     EMAIL = 'EMAIL'
-    PRINTED = 'PRINTED',
+    PRINTED = 'PRINTED'
     BOTH = 'BOTH'
                       
 class TranscriptRequestStatus(Enum):
-    PENDING = 'PENDING',
-    PROCESSING = 'PROCESSING',
-    COMPLETED = 'COMPLETED',
+    PENDING = 'PENDING'
+    PROCESSING = 'PROCESSING'
+    COMPLETED = 'COMPLETED'
     REJECTED = 'REJECTED'

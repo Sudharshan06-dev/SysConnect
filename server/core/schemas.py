@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from core.constants import RoleType, ApplicationStatus
+from core.constants import RoleType,RoleTypeWithAdmin, ApplicationStatus
 from typing import List
 
 # BaseModel => This is from Pydantic not from the database.py file
@@ -31,7 +31,7 @@ class UserResponse(BaseModel):
     lastname: str
     email: str
     username: str
-    role: RoleType
+    role: RoleTypeWithAdmin
 
     class Config:
         from_attributes  = True

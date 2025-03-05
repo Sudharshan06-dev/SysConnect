@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Depends, APIRouter
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from core.auth import get_hashed_password, get_current_user
-from core.database import get_db
+from config.database import get_db
 from uuid import uuid4
 from core.context_vars import user_id_ctx
 from core.models import UserModel, ApplicationModel

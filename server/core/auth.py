@@ -1,5 +1,5 @@
 from fastapi import HTTPException, Depends
-from core.database import get_db
+from config.database import get_db
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError

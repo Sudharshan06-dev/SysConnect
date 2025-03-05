@@ -3,11 +3,14 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from sqlalchemy.orm import Session
 from core.context_vars import user_id_ctx
 from core.auth import get_current_user
-from core.database import get_db
+from config.database import get_db
 from core.constants import RoleTypeWithAdmin
 from admin.application import application_router
+from admin.courses.course_service import course_router
 
 # Create a router for admin endpoints
+routers = [application_router, course_router]
+
 admin_router = APIRouter(prefix="/admin", tags=["Admin"])
 
 class AdminMiddleware(BaseHTTPMiddleware):
@@ -23,5 +26,6 @@ class AdminMiddleware(BaseHTTPMiddleware):
 
         response = await call_next(request)
         return response
-    
-admin_router.include_router(application_router)
+
+for admin_routers in routers:
+    admin_router.include_router(admin_routers)
