@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, Integer, String, DateTime, Enum, ForeignKey
 from config.database import Base
 from uuid import uuid4
-from core.constants import RoleType, RoleTypeWithAdmin, DegreeType, CourseType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod, ApplicationStatus, MajorType
+from core.constants import RoleType, DegreeType, CourseType, CourseEnrollmentStatus, TranscriptRequestStatus, DeliveryMethod, ApplicationStatus, MajorType
 
 class BaseModel(Base):
     __abstract__ = True  # Ensures this class is not treated as a table
@@ -24,12 +24,8 @@ class ApplicationModel(BaseModel):
     __tablename__ = 'applications'
 
     application_id = Column(Integer, primary_key=True, index=True)
-    firstname = Column(String(100))
-    lastname = Column(String(100))
-    reference_number = Column(String(100), default=uuid4())
-    email = Column(String(256), unique=True, index=True)
-    username = Column(String(100), unique=True)
-    hashed_password = Column(String(256))
+    user_id = Column(Integer, ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
+    reference_number = Column(String(100))
     role = Column(Enum(RoleType), nullable=False)
     application_status = Column(Enum(ApplicationStatus), default=ApplicationStatus.PENDING, nullable=False)
 
@@ -43,7 +39,7 @@ class UserModel(BaseModel):
     email = Column(String(256), unique=True, index=True)
     username = Column(String(100), unique=True)
     hashed_password = Column(String(256))
-    role = Column(Enum(RoleTypeWithAdmin), nullable=False)
+    role = Column(Enum(RoleType), nullable=False)
     active_user = Column(Boolean, unique=False, default=True)
 
 # Students Table: Stores student details, including major, degree level, and account status.

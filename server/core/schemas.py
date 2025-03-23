@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from core.constants import RoleType,RoleTypeWithAdmin, ApplicationStatus
+from core.constants import RoleType, ApplicationStatus
 from typing import List
 
 # BaseModel => This is from Pydantic not from the database.py file
@@ -15,12 +15,11 @@ class DefaultResponse(BaseModel):
 # User Login Data
 class ApplicationResponse(BaseModel):
     application_id: int
-    firstname: str
-    lastname: str
-    email: str
-    status: ApplicationStatus
+    user_id: int
     reference_number:str
-    username: str
+    role: RoleType
+    application_status: ApplicationStatus
+    
 
     class Config:
         from_attributes  = True
@@ -31,7 +30,7 @@ class UserResponse(BaseModel):
     lastname: str
     email: str
     username: str
-    role: RoleTypeWithAdmin
+    role: RoleType
 
     class Config:
         from_attributes  = True
@@ -44,7 +43,7 @@ class UserLoginResponse(BaseModel):
 
 ''' REQUEST FUNCTIONS'''
 
-class CreateUserRequest(BaseModel):
+class CreateApplicationUserRequest(BaseModel):
     firstname: str
     lastname: str
     email: str

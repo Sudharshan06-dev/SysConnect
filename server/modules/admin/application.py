@@ -1,14 +1,15 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 from typing import List
 from core.schemas import ApproveRequest, BulkApproveRequest, ApplicationResponse
 from config.database import get_db
 from core.auth import get_current_user
-from core.constants import ApplicationStatus, SUCCESS, ERROR
+from core.constants import ApplicationStatus, RoleType, SUCCESS, ERROR
 from core.models import ApplicationModel, UserModel
 from core.email_sender import sendEmail
 from core.utility import create_response
+from modules.admin import admin_routing_middleware as admin_middleware 
 import logging
 import asyncio
 
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 application_router = APIRouter(prefix='/application')
 
 #APPROVE A SINGLE USER
-@application_router.put('/{user_type}/{application_id}/approve', response_class=JSONResponse)
+@application_router.put('/{user_type}/{application_id}/approve', response_class=JSONResponse, dependencies=[Depends(admin_middleware)])
 async def approve_user(
     user_type: str,
     application_id: int,
@@ -39,7 +40,7 @@ async def approve_user(
             if not application_data:
                 return create_response(422, "approve_user", ERROR)
 
-            await _create_user(application_data, db)
+            await _update_user_role(application_data.user_id, application_data.role, db)
             return create_response(200, "approve_user", SUCCESS)
         
         return create_response(422, "approve_user", ERROR)
@@ -50,7 +51,7 @@ async def approve_user(
 
 
 #REJECT A SINGLE USER
-@application_router.put('/{user_type}/{application_id}/reject', response_class=JSONResponse)
+@application_router.put('/{user_type}/{application_id}/reject', response_class=JSONResponse, dependencies=[Depends(admin_middleware)])
 async def reject_user(
     user_type: str,
     application_id: int,
@@ -65,7 +66,13 @@ async def reject_user(
         email_sent = await sendEmail(user_data.email)
 
         if email_sent:
-            await _update_application_status(user_type, application_id, ApplicationStatus.REJECTED, db)
+            application_data = await _update_application_status(user_type, application_id, ApplicationStatus.REJECTED, db)
+
+            if not application_data:
+                return create_response(422, "approve_user", ERROR)
+            
+            _update_user_role(application_data.user_id, application_data.role, db)
+                
             return create_response(200, "reject_user", SUCCESS)
 
         return create_response(422, "reject_user", ERROR)
@@ -76,7 +83,7 @@ async def reject_user(
 
 
 #APPROVE MULTIPLE USERS
-@application_router.put('/{user_type}/approve', response_class=JSONResponse)
+@application_router.put('/{user_type}/approve', response_class=JSONResponse, dependencies=[Depends(admin_middleware)])
 async def approve_multiple_users(
     user_type: str,
     users_data: List[BulkApproveRequest],
@@ -94,8 +101,12 @@ async def approve_multiple_users(
 
         # Process DB updates without waiting for emails
         for user in users_data:
-            _update_application_status(user_type, user.application_id, ApplicationStatus.APPROVED, db)
-            _create_user(user, db)
+            application_data = await _update_application_status(user_type, user.application_id, ApplicationStatus.APPROVED, db)
+
+            if not application_data:
+                return create_response(422, "approve_user", ERROR)
+
+            _update_user_role(application_data.user_id, application_data.role, db)
 
         return create_response(200, "multiple_user")
 
@@ -105,7 +116,7 @@ async def approve_multiple_users(
 
 
 #REJECT MULTIPLE USERS
-@application_router.put('/{user_type}/reject', response_class=JSONResponse)
+@application_router.put('/{user_type}/reject', response_class=JSONResponse, dependencies=[Depends(admin_middleware)])
 async def reject_multiple_users(
     user_type: str,
     users_data: List[BulkApproveRequest],
@@ -123,8 +134,12 @@ async def reject_multiple_users(
 
         # Process DB updates without waiting for emails
         for user in users_data:
-            _update_application_status(user_type, user.application_id, ApplicationStatus.REJECTED, db)
-            _create_user(user, db)
+            application_data = await _update_application_status(user_type, user.application_id, ApplicationStatus.REJECTED, db)
+
+            if not application_data:
+                return create_response(422, "approve_user", ERROR)
+
+            _update_user_role(application_data.user_id, application_data.role, db)
 
         return create_response(200, "reject_multiple_users")
 
@@ -134,7 +149,7 @@ async def reject_multiple_users(
 
 
 #GET ALL PENDING USERS
-@application_router.get('/{user_type}/all', response_model=List[ApplicationResponse])
+@application_router.get('/{user_type}/all', response_model=List[ApplicationResponse], dependencies=[Depends(admin_middleware)])
 async def get_pending_users(
     user_type: str,
     db: Session = Depends(get_db),
@@ -157,7 +172,7 @@ async def get_pending_users(
 
 
 #FETCH DETAILS ABOUT A SPECIFIC APPLICATION
-@application_router.get('/{user_type}/application/{application_id}', response_model=ApplicationResponse)
+@application_router.get('/{user_type}/application/{application_id}', response_model=ApplicationResponse, dependencies=[Depends(admin_middleware)])
 async def get_application_details(
     user_type: str,
     application_id: int,
@@ -183,6 +198,9 @@ async def get_application_details(
         return create_response(500, "get_specific_application", ERROR)
 
 
+'''
+INTERNAL HELPERS STARTS
+'''
 ##INTERNAL HELPERS ##
 async def _update_application_status(user_type: str, application_id: int, status: ApplicationStatus, db: Session):
 
@@ -203,23 +221,22 @@ async def send_bulk_email(email_list):
     for email in email_list:
         await sendEmail(email)  # Ensure `sendEmail` is async
 
-async def _create_user(application_data: ApplicationModel, db: Session):
+async def _update_user_role(user_id: int, user_role_status: RoleType, db: Session):
 
     try:
-        db_user = UserModel(
-            firstname=application_data.firstname,
-            lastname=application_data.lastname,
-            email=application_data.email,
-            username=application_data.username,
-            hashed_password=application_data.hashed_password,
-            role=application_data.role,
-            active_user=True
-        )
 
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
+        user_data = db.query(UserModel).filter(UserModel.user_id == user_id).first()
+
+        if user_data:
+            user_data.role = user_role_status
+            db.commit()
+            return user_data
+        
+        return None
 
     except Exception as e:
         db.rollback()
         logger.error(f"Error in _create_user: {str(e)}")
+'''
+INTERNAL HELPERS ENDS
+'''

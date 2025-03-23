@@ -7,7 +7,7 @@ from config.neo4j import neo4j_conn
 from core.models import CoursesModel, DegreeType, CourseType
 from core.constants import MajorPrefix, SUCCESS, ERROR
 from core.auth import get_current_user
-from admin.courses.course_schemas import CourseCreateSchema
+from modules.admin.courses.course_schemas import CourseCreateSchema
 from core.utility import create_response
 import logging
 

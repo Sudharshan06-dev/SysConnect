@@ -10,10 +10,8 @@ ERROR = "Error"
 class RoleType(Enum):
     STUDENT = 'STUDENT'
     PROFESSOR = 'PROFESSOR'
-
-class RoleTypeWithAdmin(Enum):
-    STUDENT = 'STUDENT'
-    PROFESSOR = 'PROFESSOR'
+    POTENTIAL_STUDENT = 'POTENTIAL_STUDENT'
+    POTENTIAL_PROFESSOR = 'POTENTIAL PROFESSOR'
     ADMIN = 'ADMIN'
 
 class ApplicationStatus(str, Enum):

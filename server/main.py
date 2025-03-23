@@ -5,21 +5,29 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from core.models import UserTokenModel, Base
 from core.auth import authenticate_user, create_access_token, oauth2_scheme
-from core.schemas import UserResponse, UserLoginResponse, DefaultResponse
+from core.schemas import UserLoginResponse, DefaultResponse, UserResponse
 from core.user_middleware import user_middleware
-from login import router as login_router
-from admin import admin_router, AdminMiddleware as admin_middleware
+from core.auth import get_current_user
+from modules.admin import admin_router
 from core.context_vars import user_id_ctx
+from modules.admin.application import application_router as admin_application_router
+from modules.admin.courses.course_service import course_router as admin_course_router
+from registration import registration_router
 
 #Instantiate the fastapi app
 app = FastAPI()
 
-routers = [login_router, admin_router]
-middlewares = [user_middleware, admin_middleware]
+#Adding all the necessary routes before adding it to the main router
+admin_featured_routers = [admin_application_router, admin_course_router]
+
+for admin_feature_router in admin_featured_routers:
+    admin_router.include_router(admin_feature_router)
+
+
+routers = [registration_router, admin_router]
 
 # Custom Middleware
 app.add_middleware(BaseHTTPMiddleware, dispatch=user_middleware)
-#app.add_middleware(admin_middleware)
 
 #Add all the routes for the application
 for app_router in routers:
@@ -57,6 +65,11 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     db.refresh(update_user_token)
 
     return UserLoginResponse(access_token=access_token, user=user)
+
+@app.get("/current-user", response_model=UserResponse)
+async def get_current_user_route(_: UserResponse = Depends(get_current_user)):
+    return user_id_ctx.get()
+
 
 @app.post("/logout", response_model=DefaultResponse)
 async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

@@ -14,14 +14,14 @@ email_config = ConnectionConfig(
     MAIL_SSL_TLS=False   # Corrected field
 )
 
-async def sendEmail(email: str, background_tasks: BackgroundTasks):
+async def sendEmail(email: str):
 
     try:
 
         message = MessageSchema(
             subject="Check subject",
-            recipients=email,
-            body=email_body,
+            recipients=[email],
+            body="Test",
             subtype='html'
         )
 
@@ -29,7 +29,7 @@ async def sendEmail(email: str, background_tasks: BackgroundTasks):
         await fm.send_message(message)  # Directly await the email send task
         
     except Exception as e:
-        print('Error occured while sending email' + email, e)
+        print('Error occured while sending email ' + email, e)
         return False
 
     return True
