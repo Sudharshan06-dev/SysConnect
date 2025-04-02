@@ -57,7 +57,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 
     update_user_token = UserTokenModel(
         user_id = user.user_id,
-        user_token=access_token
+        token=access_token
     )
 
     db.add(update_user_token)
@@ -74,7 +74,7 @@ async def get_current_user_route(_: UserResponse = Depends(get_current_user)):
 @app.post("/logout", response_model=DefaultResponse)
 async def logout(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     
-    token_entry = await db.query(UserTokenModel).filter(UserTokenModel.user_token == token.access_token and UserTokenModel.user_id == user_id_ctx.get('user_id')).first()
+    token_entry = await db.query(UserTokenModel).filter(UserTokenModel.token == token.access_token and UserTokenModel.user_id == user_id_ctx.get('user_id')).first()
 
     if token_entry:
         token_entry.is_revoked = True

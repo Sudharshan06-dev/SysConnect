@@ -1,6 +1,6 @@
 from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
-from core.auth import get_hashed_password, get_current_user
+from core.auth import get_hashed_password
 from config.database import get_db
 from core.models import UserModel, ApplicationModel
 from core.constants import ApplicationStatus
@@ -36,10 +36,12 @@ async def create_application_user(user_data: CreateApplicationUserRequest, db: S
 
     # Create application and associate with the user
     db_application_user = ApplicationModel(
-        user_id=db_user.user_id,
-        reference_number=generate_reference_number(),
-        application_status=ApplicationStatus.PENDING,
-        role=user_data.role
+        user_id = db_user.user_id,
+        reference_number = generate_reference_number(),
+        degree = user_data.degree if user_data.degree else None,
+        major = user_data.major if user_data.major else None,
+        role = user_data.role,
+        application_status = ApplicationStatus.PENDING
     )
 
     db.add(db_application_user)

@@ -7,5 +7,7 @@ passlib
 pyjwt
 neo4j
 bcrypt
+boto3
+aioboto3
 fastapi-mail
 python-multipart

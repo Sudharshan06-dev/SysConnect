@@ -7,7 +7,7 @@ ERROR = "Error"
 
 
 #Enum Types
-class RoleType(Enum):
+class RoleType(str, Enum):
     STUDENT = 'STUDENT'
     PROFESSOR = 'PROFESSOR'
     POTENTIAL_STUDENT = 'POTENTIAL_STUDENT'
@@ -19,41 +19,45 @@ class ApplicationStatus(str, Enum):
     APPROVED = "APPROVED"
     REJECTED = "REJECTED"
 
-class DegreeType(Enum):
+class DegreeType(str, Enum):
     BACHELORS = 'BACHELORS'
     MASTERS = 'MASTERS'
     POSTDOCTORATE = 'POSTDOCTORATE'
 
-class CourseType(Enum):
+class CourseType(str, Enum):
     CORE = 'CORE'
     ELECTIVE = 'ELECTIVE'
 
-class MajorPrefix(Enum):
+class MajorPrefix(str, Enum):
     COMPUTER_SCIENCE = 'CPSC'
     SOFTWARE_ENGINEERING = 'SW'
-    MECHANICAL = 'MECH'
-    CIVIL = 'CVL'
-    ELECTRICAL = 'EEE'
 
-class MajorType(Enum):
+class MajorType(str, Enum):
     COMPUTER_SCIENCE = 'COMPUTER_SCIENCE'
     SOFTWARE_ENGINEERING = 'SOFTWARE_ENGINEERING'
-    MECHANICAL = 'MECHANICAL'
-    CIVIL = 'CIVIL'
-    ELECTRICAL = 'ELECTRICAL'
 
-class CourseEnrollmentStatus(Enum):
+class CourseEnrollmentStatus(str, Enum):
     ENROLLED = 'ENROLLED'
     COMPLETED = 'COMPLETED'
     DROPPED = 'DROPPED'
 
-class DeliveryMethod(Enum):
+class DeliveryMethod(str, Enum):
     EMAIL = 'EMAIL'
     PRINTED = 'PRINTED'
     BOTH = 'BOTH'
+
+class NotificationMethod(str, Enum):
+    REMINDER = 'REMINDER'
+    SYSTEM = 'SYSTEM'
+    GRADE_UPDATE = 'GRADE_UPDATE'
                       
-class TranscriptRequestStatus(Enum):
+class TranscriptRequestStatus(str, Enum):
     PENDING = 'PENDING'
     PROCESSING = 'PROCESSING'
     COMPLETED = 'COMPLETED'
     REJECTED = 'REJECTED'
+
+class FileCategoryStatus(str, Enum):
+    COURSE = 'COURSE'
+    ASSIGNMENT_SUBMISSION = 'ASSIGNMENT_SUBMISSION'
+    ASSIGNMENT = 'ASSIGNMENT'

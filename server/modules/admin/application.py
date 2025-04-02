@@ -5,11 +5,11 @@ from typing import List
 from core.schemas import ApproveRequest, BulkApproveRequest, ApplicationResponse
 from config.database import get_db
 from core.auth import get_current_user
-from core.constants import ApplicationStatus, RoleType, SUCCESS, ERROR
-from core.models import ApplicationModel, UserModel
+from core.constants import ApplicationStatus, RoleType, DegreeType, MajorType, SUCCESS, ERROR
+from core.models import ApplicationModel, UserModel, StudentModel, ProfessorModel
 from core.email_sender import sendEmail
 from core.utility import create_response
-from modules.admin import admin_routing_middleware as admin_middleware 
+from modules.admin import admin_middleware 
 import logging
 import asyncio
 
@@ -19,6 +19,56 @@ logger = logging.getLogger(__name__)
 
 application_router = APIRouter(prefix='/application')
 
+
+#GET ALL PENDING USERS
+@application_router.get('/{user_type}/all', response_model=List[ApplicationResponse], dependencies=[Depends(admin_middleware)])
+async def get_pending_users(
+    user_type: str,
+    db: Session = Depends(get_db),
+    _ = Depends(get_current_user),
+):
+    """
+    Fetch all pending applications for a given user type.
+    """
+    try:
+        pending_users = db.query(ApplicationModel).filter(
+            (ApplicationModel.application_status == ApplicationStatus.PENDING) &
+            (ApplicationModel.role == user_type)
+        ).all()
+
+        return ApplicationResponse.model_validate(pending_users, from_attributes=True)
+
+    except Exception as e:
+        logger.error(f"Error in get_pending_users for {user_type}: {str(e)}")
+        return []
+
+
+#FETCH DETAILS ABOUT A SPECIFIC APPLICATION
+@application_router.get('/{user_type}/application/{application_id}', response_model=ApplicationResponse, dependencies=[Depends(admin_middleware)])
+async def get_application_details(
+    user_type: str,
+    application_id: int,
+    db: Session = Depends(get_db),
+    _ = Depends(get_current_user),
+):
+    """
+    Fetch details of a specific application.
+    """
+    try:
+        application_data = db.query(ApplicationModel).filter(
+            (ApplicationModel.role == user_type) &
+            (ApplicationModel.application_id == application_id)
+        ).first()
+
+        if application_data:
+            return ApplicationResponse.model_validate(application_data)
+
+        return create_response(422, "get_specific_application", ERROR)
+
+    except Exception as e:
+        logger.error(f"Error in get_application_details for {user_type} ID {application_id}: {str(e)}")
+        return create_response(500, "get_specific_application", ERROR)
+    
 #APPROVE A SINGLE USER
 @application_router.put('/{user_type}/{application_id}/approve', response_class=JSONResponse, dependencies=[Depends(admin_middleware)])
 async def approve_user(
@@ -41,6 +91,13 @@ async def approve_user(
                 return create_response(422, "approve_user", ERROR)
 
             await _update_user_role(application_data.user_id, application_data.role, db)
+            
+            if user_type == RoleType.STUDENT.value:
+                await _create_student_record(application_data.user_id, application_data.degree, application_data.major, db)
+            
+            if user_type == RoleType.PROFESSOR.value:
+                await _create_professor_record(application_data.user_id, application_data.major, db)
+
             return create_response(200, "approve_user", SUCCESS)
         
         return create_response(422, "approve_user", ERROR)
@@ -106,7 +163,13 @@ async def approve_multiple_users(
             if not application_data:
                 return create_response(422, "approve_user", ERROR)
 
-            _update_user_role(application_data.user_id, application_data.role, db)
+            await _update_user_role(application_data.user_id, application_data.role, db)
+
+            if user_type == RoleType.STUDENT.value:
+                await _create_student_record(application_data.user_id, application_data.degree, application_data.major, db)
+            
+            if user_type == RoleType.PROFESSOR.value:
+                await _create_professor_record(application_data.user_id, application_data.major, db)
 
         return create_response(200, "multiple_user")
 
@@ -148,56 +211,6 @@ async def reject_multiple_users(
         return create_response(500, "reject_multiple_users", ERROR)
 
 
-#GET ALL PENDING USERS
-@application_router.get('/{user_type}/all', response_model=List[ApplicationResponse], dependencies=[Depends(admin_middleware)])
-async def get_pending_users(
-    user_type: str,
-    db: Session = Depends(get_db),
-    _ = Depends(get_current_user),
-):
-    """
-    Fetch all pending applications for a given user type.
-    """
-    try:
-        pending_users = db.query(ApplicationModel).filter(
-            (ApplicationModel.application_status == ApplicationStatus.PENDING) &
-            (ApplicationModel.role == user_type)
-        ).all()
-
-        return ApplicationResponse.model_validate(pending_users, from_attributes=True)
-
-    except Exception as e:
-        logger.error(f"Error in get_pending_users for {user_type}: {str(e)}")
-        return []
-
-
-#FETCH DETAILS ABOUT A SPECIFIC APPLICATION
-@application_router.get('/{user_type}/application/{application_id}', response_model=ApplicationResponse, dependencies=[Depends(admin_middleware)])
-async def get_application_details(
-    user_type: str,
-    application_id: int,
-    db: Session = Depends(get_db),
-    _ = Depends(get_current_user),
-):
-    """
-    Fetch details of a specific application.
-    """
-    try:
-        application_data = db.query(ApplicationModel).filter(
-            (ApplicationModel.role == user_type) &
-            (ApplicationModel.application_id == application_id)
-        ).first()
-
-        if application_data:
-            return ApplicationResponse.model_validate(application_data)
-
-        return create_response(422, "get_specific_application", ERROR)
-
-    except Exception as e:
-        logger.error(f"Error in get_application_details for {user_type} ID {application_id}: {str(e)}")
-        return create_response(500, "get_specific_application", ERROR)
-
-
 '''
 INTERNAL HELPERS STARTS
 '''
@@ -220,6 +233,34 @@ async def _update_application_status(user_type: str, application_id: int, status
 async def send_bulk_email(email_list):
     for email in email_list:
         await sendEmail(email)  # Ensure `sendEmail` is async
+
+async def _create_student_record(user_id: int, degree_type: DegreeType, major: MajorType, db: Session):
+
+    student_user = StudentModel(
+        user_id = user_id,
+        degree = degree_type,
+        major = major    
+    )
+
+    db.add(student_user)
+    db.commit()
+    db.refresh(student_user)
+    
+    return True
+
+async def _create_professor_record(user_id: int, major: MajorType, db: Session):
+
+    professor_user = ProfessorModel(
+        user_id = user_id,
+        department = major
+    )
+
+    db.add(professor_user)
+    db.commit()
+    db.refresh(professor_user)
+
+    return True
+
 
 async def _update_user_role(user_id: int, user_role_status: RoleType, db: Session):
 

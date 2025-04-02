@@ -8,7 +8,7 @@ from core.constants import RoleType
 
 admin_router = APIRouter(prefix="/admin", tags=["Admin"])
 
-async def admin_routing_middleware(request: Request, db: Session = Depends(get_db)):
+async def admin_middleware(request: Request, db: Session = Depends(get_db)):
 
     if user_id_ctx.get() is None:
         current_user = await get_current_user(request, db)

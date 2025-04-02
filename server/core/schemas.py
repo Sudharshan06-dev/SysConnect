@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
-from core.constants import RoleType, ApplicationStatus
-from typing import List
+from core.constants import RoleType, ApplicationStatus, DegreeType, MajorType
+from typing import Optional
 
 # BaseModel => This is from Pydantic not from the database.py file
 # from_attributes = True => Allows Pydantic models to map attributes directly from SQLAlchemy models.
@@ -18,6 +18,8 @@ class ApplicationResponse(BaseModel):
     user_id: int
     reference_number:str
     role: RoleType
+    degree: Optional[DegreeType] = None
+    major: Optional[MajorType] = None
     application_status: ApplicationStatus
     
 
@@ -50,6 +52,8 @@ class CreateApplicationUserRequest(BaseModel):
     password: str
     username: str
     role: RoleType
+    degree: Optional[DegreeType] = None
+    major: Optional[MajorType] = None
 
 class ApproveRequest(BaseModel):
     email: EmailStr

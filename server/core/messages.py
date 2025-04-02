@@ -5,7 +5,8 @@ SUCCESS = {
         "reject_multiple_users": "Users have been rejected and emails are sent successfully",
         "courses_added": "Courses has been added successfully",
         "prerequisite_added": "Prerequisite added has been added successfully",
-        "course_deleted": "Course deleted successfully"
+        "course_deleted": "Course deleted successfully",
+        "files_uploaded": "Files uploaded successfully"
 }
     
 ERROR = {
@@ -15,5 +16,6 @@ ERROR = {
         "reject_multiple_users": "Failed to approve users. Please try again!",
         "get_specific_application": "Failed to fetch the application details. Please try again!",
         "courses_added_failed": "Failed to add courses. Please try again!",
-        "course_deleted": "Failed to add courses. Please try again!"
+        "course_deleted": "Failed to add courses. Please try again!",
+        "invalid_bucket_name": "Invalid reference_name format. Use bucketname_attachmentname."
 }
