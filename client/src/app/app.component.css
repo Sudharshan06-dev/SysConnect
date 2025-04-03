@@ -1,0 +1,58 @@
+
+/* Sidebar styling - adjust for expanded and minimized states */
+app-sidebar {
+  height: 100%;
+  background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: min-width 0.3s ease;
+}
+
+/* Target the expanded state */
+.k-drawer-expanded app-sidebar {
+  min-width: 240px !important;
+}
+
+/* Target the minimized state */
+.k-drawer-mini app-sidebar {
+  min-width: 50px !important; /* Adjust to match your minimized width */
+}
+
+/* Content area - make it respond to sidebar state */
+.content {
+  flex: 1;
+  padding: 0px;
+  overflow-y: auto;
+  height: 100%;
+  transition: margin-left 0.3s ease;
+}
+
+/* Layout container - add class detection for drawer state */
+.layout {
+  display: flex;
+  height: calc(100vh - 60px);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Default Background for Non-Auth Pages */
+.default-background {
+  background: linear-gradient(135deg, #f4f6f9, #dfe4ea);
+  background-size: cover;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Login & Register Background */
+.auth-background {
+  background: url('../../public/sysconnect-bg.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

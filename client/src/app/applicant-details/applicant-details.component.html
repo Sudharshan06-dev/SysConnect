@@ -1,0 +1,16 @@
+<kendo-grid [kendoGridBinding]="gridData"
+            [sortable]="true"
+            [filterable]="true"
+            [filter]="filter"
+            (filterChange)="filterChange($event)"
+>
+  <kendo-grid-column field="ReferenceNumber" title="ReferenceNumber"></kendo-grid-column>
+  <kendo-grid-column field="FirstName" title="FirstName"> </kendo-grid-column>
+  <kendo-grid-column field="LastName" title="LastName"> </kendo-grid-column>
+  <kendo-grid-column field="Email" title="Email"> </kendo-grid-column>
+  <kendo-grid-column field="Username" title="Username"> </kendo-grid-column>
+  <kendo-grid-column field="Role" title="Role"> </kendo-grid-column>
+  <kendo-grid-column field="Degree" title="Degree"> </kendo-grid-column>
+  <kendo-grid-column field="Major" title="Major"></kendo-grid-column>
+  <kendo-grid-column field="Status" title="Status"> </kendo-grid-column>
+</kendo-grid>

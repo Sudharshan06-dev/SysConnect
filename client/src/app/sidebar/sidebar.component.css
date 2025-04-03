@@ -1,0 +1,20 @@
+kendo-drawer-container {
+  position: fixed;
+  height: 100%;
+}
+
+.custom-toolbar {
+  width: 100%;
+  background: linear-gradient(135deg, #1F2937, #374151) !important;
+  line-height: 10px;
+  border-bottom: inset;
+  border-bottom-width: 1px;
+  padding: 3px 8px;
+  color: white;
+}
+
+.k-drawer {
+  border-color: var(--kendo-color-border, rgba(0, 0, 0, 0.08));
+  background: linear-gradient(135deg, #1F2937, #374151) !important;
+  color: white;
+}

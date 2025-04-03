@@ -1,0 +1,21 @@
+<div class="custom-toolbar">
+  <button
+    kendoButton
+    [svgIcon]="menuSvg"
+    fillMode="flat"
+    (click)="onExpandChange()"
+  ></button>
+</div>
+
+<kendo-drawer-container>
+  <kendo-drawer
+    #drawer
+    [items]="items"
+    mode="push"
+    [mini]="true"
+    [autoCollapse]="false"
+    [(expanded)]="expanded"
+    (select)="onSelect($event)"
+  >
+  </kendo-drawer>
+</kendo-drawer-container>

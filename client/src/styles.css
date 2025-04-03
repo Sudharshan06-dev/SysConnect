@@ -1,1 +1,82 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles for the entire application */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.input-field::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/*Updated Button Colors (Orange Theme) */
+.button {
+  width: 100%;
+  padding: 12px;
+  background: #FF7F50; /* Coral color for buttons */
+  border: none;
+  color: white;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+button:hover {
+  background: #E67342; /* Slightly darker coral shade */
+}
+
+.link {
+  display: block;
+  margin-top: 10px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.k-sidebar {
+  height: 100%;
+}
+
+.content {
+  transition: margin-left 0.3s ease;
+}
