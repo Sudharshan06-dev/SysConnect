@@ -84,6 +84,7 @@ class ProfessorModel(BaseModel):
 
     professor_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey('users.user_id', ondelete="CASCADE"), nullable=False)
+    degree = Column(Enum(DegreeType), nullable=False)
     department = Column(Enum(MajorType), nullable=False)
     is_active = Column(Boolean, default=True)
 

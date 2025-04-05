@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException, Depends,status, Response
+from fastapi.middleware.cors import CORSMiddleware
 from config.database import engine, get_db
 from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 from core.models import UserTokenModel, Base
 from core.auth import authenticate_user, create_access_token, oauth2_scheme
-from core.schemas import UserLoginResponse, DefaultResponse, UserResponse
+from core.schemas import UserLoginResponse, DefaultResponse, UserResponse, UserLoginRequest
 from core.user_middleware import user_middleware
 from core.auth import get_current_user
 from modules.admin import admin_router
@@ -26,8 +27,19 @@ for admin_feature_router in admin_featured_routers:
 
 routers = [registration_router, admin_router]
 
+origins = [
+    "http://localhost:4200",
+]
+
 # Custom Middleware
 app.add_middleware(BaseHTTPMiddleware, dispatch=user_middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Add all the routes for the application
 for app_router in routers:
@@ -42,7 +54,9 @@ async def root():
     return {"message": "API is running"}
 
 @app.post("/token", response_model= UserLoginResponse)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login(form_data: UserLoginRequest, db: Session = Depends(get_db)):
+
+    print('form_data', form_data)
 
     user = authenticate_user(form_data.username, form_data.password, db)
     

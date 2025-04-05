@@ -45,11 +45,16 @@ class UserLoginResponse(BaseModel):
 
 ''' REQUEST FUNCTIONS'''
 
+class UserLoginRequest(BaseModel):
+    username: str
+    password: str
+    
 class CreateApplicationUserRequest(BaseModel):
     firstname: str
     lastname: str
     email: str
     password: str
+    confirmPassword: str
     username: str
     role: RoleType
     degree: Optional[DegreeType] = None
