@@ -1,0 +1,41 @@
+<div class="container auth">
+  <div class="card">
+    <h3 style="text-align: center;">Application Details</h3>
+    <form [formGroup]="applicationEnrollmentForm" (ngSubmit)="enrollApplication()">
+      <input type="text" formControlName="firstname" placeholder="First Name" class="input-field" />
+      <div *ngIf="applicationEnrollmentForm.get('firstname')?.invalid && applicationEnrollmentForm.get('firstname')?.touched" class="error"></div>
+
+      <input type="text" formControlName="lastname" placeholder="Last Name" class="input-field" />
+      <div *ngIf="applicationEnrollmentForm.get('lastname')?.invalid && applicationEnrollmentForm.get('lastname')?.touched" class="error"></div>
+
+      <input type="email" formControlName="email" placeholder="Email" class="input-field" />
+      <div *ngIf="applicationEnrollmentForm.get('email')?.invalid && applicationEnrollmentForm.get('email')?.touched" class="error"></div>
+
+      <input type="text" formControlName="username" placeholder="Username" class="input-field" />
+      <div *ngIf="applicationEnrollmentForm.get('username')?.invalid && applicationEnrollmentForm.get('username')?.touched" class="error"></div>
+
+      <select formControlName="role" class="input-field">
+        <option value="" disabled selected>Select Role</option>
+        <option *ngFor="let role of roleTypes | keyvalue" [value]="role.value">{{ role.value }}</option>
+      </select>
+      <div *ngIf="applicationEnrollmentForm.get('role')?.invalid && applicationEnrollmentForm.get('role')?.touched" class="error"></div>
+
+      <select formControlName="degree" class="input-field">
+        <option value="" disabled selected>Select Degree</option>
+        <option *ngFor="let degree of degreeTypes" [value]="degree">{{ degree }}</option>
+      </select>
+      <div *ngIf="applicationEnrollmentForm.get('degree')?.invalid && applicationEnrollmentForm.get('degree')?.touched" class="error"></div>
+
+      <select formControlName="major" class="input-field">
+        <option value="" disabled selected>Select Major</option>
+        <option *ngFor="let major of majorTypes" [value]="major">{{ major }}</option>
+      </select>
+      <div *ngIf="applicationEnrollmentForm.get('major')?.invalid && applicationEnrollmentForm.get('major')?.touched" class="error"></div>-->
+
+
+      <button type="submit" class="button" [disabled]="applicationEnrollmentForm.invalid"></button>
+    </form>
+
+
+  </div>
+</div>

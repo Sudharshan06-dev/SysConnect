@@ -8,6 +8,14 @@ app-sidebar {
   transition: min-width 0.3s ease;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+
 /* Target the expanded state */
 .k-drawer-expanded app-sidebar {
   min-width: 240px !important;
@@ -55,4 +63,13 @@ app-sidebar {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.spinner-logo {
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
 }

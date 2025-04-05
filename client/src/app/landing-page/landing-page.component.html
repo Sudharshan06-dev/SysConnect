@@ -1,0 +1,107 @@
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+  <div class="container">
+    <a class="navbar-brand" [routerLink]="[]">
+      <span class="fw-bold text-primary">SysConnect</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="[]" [fragment]="'home'" (click)="scrollToSection('home')">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="[]" [fragment]="'portals'" (click)="scrollToSection('portals')">Portals</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="[]" [fragment]="'about'" (click)="scrollToSection('about')">About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero-section">
+  <div class="container text-center">
+    <h1 class="display-4 fw-bold mb-4">Welcome to SysConnect</h1>
+    <p class="lead mb-4">Your comprehensive university management system</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a [routerLink]="[]" [fragment]="'portals'" (click)="scrollToSection('portals')" class="btn btn-primary btn-lg">Access Portals</a>
+      <a [routerLink]="[]" [fragment]="'about'" (click)="scrollToSection('about')" class="btn btn-outline-light btn-lg">Learn More</a>
+    </div>
+  </div>
+</section>
+
+<!-- Portal Access Section -->
+<section id="portals" class="py-5">
+  <div class="container">
+    <div class="section-title">
+      <h2>Access Your Portal</h2>
+      <p>Choose the appropriate portal for your needs</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Current Students Portal -->
+      <div class="col-md-4">
+        <div class="access-card">
+          <div class="icon-container">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h3>Current Students</h3>
+          <p>Access courses, grades, and campus resources</p>
+          <a routerLink="/login" class="btn btn-primary">Student Portal Login</a>
+        </div>
+      </div>
+
+      <!-- Prospective Students Portal -->
+      <div class="col-md-4">
+        <div class="access-card">
+          <div class="icon-container">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Prospective Students</h3>
+          <p>Learn about admissions, programs, and campus life</p>
+          <a routerLink="/registration" class="btn btn-primary">Admissions Portal</a>
+        </div>
+      </div>
+
+      <!-- Faculty Portal -->
+      <div class="col-md-4">
+        <div class="access-card">
+          <div class="icon-container">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <h3>Faculty & Staff</h3>
+          <p>Manage courses, students, and resources</p>
+          <a routerLink="/login" class="btn btn-primary">Faculty Portal Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h2 class="fw-bold">About SysConnect</h2>
+        <p class="mb-4">SysConnect is an integrated university management system designed to streamline academic processes for students, faculty, and administrative staff.</p>
+        <p>Our platform provides easy access to course materials, grades, schedules, and communication tools in one centralized location, enhancing the educational experience for the entire university community.</p>
+      </div>
+      <div class="col-lg-6">
+        <img src="/sysconnect-bg.png" alt="SysConnect Platform" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container text-center">
+    <p class="mb-0">&copy; 2025 SysConnect. All Rights Reserved.</p>
+  </div>
+</footer>

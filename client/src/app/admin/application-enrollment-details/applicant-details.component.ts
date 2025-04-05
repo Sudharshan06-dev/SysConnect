@@ -4,7 +4,7 @@ import {CompositeFilterDescriptor} from '@progress/kendo-data-query';
 
 
 @Component({
-  selector: 'app-applicant-details',
+  selector: 'app-application-enrollment-details',
   standalone: true,
   imports: [
     GridComponent,

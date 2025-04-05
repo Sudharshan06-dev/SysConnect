@@ -1,0 +1,33 @@
+<div class="container auth">
+  <div class="card">
+    <h3 style="text-align: center;">Registration</h3>
+    <form [formGroup]="signupForm" (ngSubmit)="submitRegistration()">
+      <input type="text" formControlName="firstname" placeholder="First Name" class="input-field" />
+      <div *ngIf="signupForm.get('firstname')?.invalid && signupForm.get('firstname')?.touched" class="error">{{errors.firsname}}</div>
+
+      <input type="text" formControlName="lastname" placeholder="Last Name" class="input-field" />
+      <div *ngIf="signupForm.get('lastname')?.invalid && signupForm.get('lastname')?.touched" class="error">{{errors.lastname}}</div>
+
+      <input type="email" formControlName="email" placeholder="Email" class="input-field" />
+      <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="error">{{errors.email}}</div>
+
+      <input type="text" formControlName="username" placeholder="Username" class="input-field" />
+      <div *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched" class="error">{{errors.username}}</div>
+
+      <select formControlName="role" class="input-field">
+        <option value="" disabled selected>Select Role</option>
+        <option *ngFor="let role of roleTypes | keyvalue" [value]="role.value">{{ role.value }}</option>
+      </select>
+      <div *ngIf="signupForm.get('role')?.invalid && signupForm.get('role')?.touched" class="error">{{errors.role}}</div>
+
+      <input type="password" formControlName="password" placeholder="Password" class="input-field" />
+      <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="error">{{errors.password}}</div>
+
+      <input type="password" formControlName="confirmPassword" placeholder="Confirm Password" class="input-field" />
+      <div *ngIf="signupForm.hasError('mismatch') && signupForm.get('confirmPassword')?.touched" class="error">{{errors.password_match}}</div>
+
+      <button type="submit" class="button" [disabled]="signupForm.invalid">{{labels.signUp}}</button>
+    </form>
+    <a class="link" routerLink="/login">{{labels.login}}</a>
+  </div>
+</div>

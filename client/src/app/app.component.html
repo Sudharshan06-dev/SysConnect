@@ -1,15 +1,43 @@
-<div [ngClass]="{'auth-background': isAuthPage, 'default-background': !isAuthPage}">
-  <ng-container *ngIf="!isAuthPage">
-    <app-header></app-header>
-    <div class="layout" [ngClass]="'k-drawer-' + drawerState">
-      <app-sidebar (drawerStateChange)="onDrawerStateChange($event)"></app-sidebar>
-      <div class="content">
-        <router-outlet></router-outlet>
-      </div>
-    </div>
-  </ng-container>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 
-  <ng-container *ngIf="isAuthPage">
-    <router-outlet></router-outlet>
-  </ng-container>
-</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ APP_TITLE }}</title>
+</head>
+  <body>
+
+  <ngx-spinner type="ball-scale-multiple">
+    <img src="/sysconnect-logo.png" width="80" height="80" class="spinner-logo"/>
+  </ngx-spinner>
+
+  <div [ngClass]="{'auth-background': isNonAuthPage, 'default-background': !isNonAuthPage}">
+
+    <ng-container *ngIf="!isNonAuthPage">
+
+      <ng-container *ngIf="homePage; else mainRoute">
+        <app-landing-page/>
+      </ng-container>
+
+      <ng-template #mainRoute>
+        <app-header></app-header>
+        <div class="layout" [ngClass]="'k-drawer-' + drawerState">
+          <app-sidebar (drawerStateChange)="onDrawerStateChange($event)"></app-sidebar>
+          <div class="content">
+            <router-outlet></router-outlet>
+          </div>
+        </div>
+      </ng-template>
+
+    </ng-container>
+
+    <ng-container *ngIf="isNonAuthPage">
+      <router-outlet></router-outlet>
+    </ng-container>
+  </div>
+
+  </body>
+</html>
+
+

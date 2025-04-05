@@ -1,0 +1,19 @@
+.card {
+  width: 400px;
+  text-align: center;
+  color: white;
+}
+
+.auth {
+  padding-top: 20% !important;
+}
+
+
+/* Validation messages */
+.error {
+  color: red !important;
+  font-size: 14px !important;
+  height: 16px!important; /* Set fixed height */
+  display: block!important; /* Ensure consistent spacing */
+  margin-bottom: 5px!important;
+}
