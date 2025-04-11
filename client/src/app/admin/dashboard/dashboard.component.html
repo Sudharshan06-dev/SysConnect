@@ -1,0 +1,76 @@
+<div class="container py-5">
+  <h2 class="mb-4 fw-bold text-dark">Welcome back, Admin 👋</h2>
+
+  <div class="row g-4 k-cursor-pointer">
+
+    <!-- Courses Card -->
+    <div class="col-md-4" (click)="redirect('/schedule-course')">
+      <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0 text-primary fw-semibold">Courses</h5>
+            <span class="fs-3">📚</span>
+          </div>
+          <h2 class="fw-bold text-dark">12</h2>
+          <p class="text-muted mb-0">Total Available Courses</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Applications Card -->
+    <div class="col-md-4" (click)="redirect('/application-details')">
+    <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0 text-success fw-semibold">Applications</h5>
+            <span class="fs-3">📄</span>
+          </div>
+          <div class="d-flex flex-column gap-2">
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Pending</span>
+              <span class="badge bg-warning text-dark px-3 py-2 fs-6">25</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Approved</span>
+              <span class="badge bg-success px-3 py-2 fs-6">40</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Rejected</span>
+              <span class="badge bg-danger px-3 py-2 fs-6">8</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Total</span>
+              <span class="badge bg-primary px-3 py-2 fs-6">73</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transcripts Card -->
+    <div class="col-md-4" (click)="redirect('/manage-transcripts')">
+    <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0 text-purple fw-semibold">Transcripts</h5>
+            <span class="fs-3">🎓</span>
+          </div>
+          <div class="d-flex flex-column gap-2">
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Pending</span>
+              <span class="badge bg-warning text-dark px-3 py-2 fs-6">5</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Generated</span>
+              <span class="badge bg-success px-3 py-2 fs-6">18</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center bg-light rounded px-3 py-2">
+              <span class="fw-medium text-muted">Total</span>
+              <span class="badge bg-primary px-3 py-2 fs-6">23</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

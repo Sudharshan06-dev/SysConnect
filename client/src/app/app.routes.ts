@@ -8,13 +8,17 @@ import {ApplicantDetailsComponent} from './admin/application-enrollment-details/
 import {ProfileComponent} from './account/profile/profile.component';
 import {LandingPageComponent} from './landing-page/landing-page.component';
 import {ApplicationEnrollmentComponent} from './applicant/application-enrollment/application-enrollment.component';
+import {DashboardComponent} from './admin/dashboard/dashboard.component';
+import {TranscriptRequestsComponent} from './admin/transcript-requests/transcript-requests.component';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full' },
     {path: 'home', component: LandingPageComponent},
     {path: 'login', component: LoginComponent},
+    {path: 'admin-dashboard', component: DashboardComponent},
     {path: 'registration', component: RegistrationComponent},
-    {path: 'application-enrollment-details', component: ApplicantDetailsComponent},
+    {path: 'application-details', component: ApplicantDetailsComponent},
+    {path: 'manage-transcripts', component: TranscriptRequestsComponent},
     {path: 'student-details', component: StudentDetailsComponent},
     {path: 'class-registration', component: ClassRegistrationComponent},
     {path: 'schedule-course', component: ScheduleCourseComponent},

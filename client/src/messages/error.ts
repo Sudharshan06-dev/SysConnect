@@ -12,5 +12,10 @@ export const errorMessages = {
   login : {
     username: "Enter a valid username",
     password: "Enter a valid password"
+  },
+
+  application_enrollment: {
+    major: 'Enter a valid major',
+    degree: 'Enter a valid degree',
   }
 }

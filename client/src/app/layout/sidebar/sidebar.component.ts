@@ -17,6 +17,8 @@ import {
 import {ButtonComponent} from '@progress/kendo-angular-buttons';
 import {Location} from '@angular/common';
 import {LocalStorageHelper} from '../../../services/local-storage.service';
+import {RequestService} from '../../../services/request.service';
+import {API_PREFIX} from '../../../environment';
 
 @Component({
   selector: 'app-sidebar',
@@ -50,8 +52,8 @@ export class SidebarComponent implements OnInit {
   public adminMenuItems = [
     {text: 'Dashboard', route: '/admin-dashboard', svgIcon: inboxIcon},
     {text: 'Courses', route: '/schedule-course', svgIcon: bellIcon},
-    {text: 'Application', route: '/application-enrollment-details', svgIcon: starOutlineIcon},
-    {text: 'Transcript', route: '/manage-transcripts', svgIcon: starOutlineIcon},
+    {text: 'Applications', route: '/application-details', svgIcon: starOutlineIcon},
+    {text: 'Transcript Requests', route: '/manage-transcripts', svgIcon: starOutlineIcon},
     {text: 'Profile', route: '/profile', svgIcon: userIcon},
     {text: 'Logout', route: '/logout', svgIcon: logoutIcon}
   ];
@@ -66,13 +68,13 @@ export class SidebarComponent implements OnInit {
   public professorMenuItems = [
     {text: 'Courses', route: '/course-dashboard', svgIcon: bellIcon},
     {text: 'Profile', route: '/profile', svgIcon: userIcon},
-    {text: 'Logout', route: '/logout', svgIcon: logoutIcon}
+    {text: 'Logout', route: '/login', svgIcon: logoutIcon}
   ];
 
   /*Text => Menu name, Icon => image path, route: navigation*/
   public items: any = [];
 
-  constructor(private route: Router, private location: Location, private localStorage: LocalStorageHelper) {
+  constructor(private route: Router, private location: Location, private localStorage: LocalStorageHelper, private apiRequest: RequestService) {
     let userRole = this.localStorage.getItem('user_details')?.role
 
     if (userRole == 'ADMIN') {
@@ -97,7 +99,12 @@ export class SidebarComponent implements OnInit {
 
   public onSelect(ev: DrawerSelectEvent): void {
     this.selected = ev.item.text;
-    this.route.navigate([ev.item.route])
+
+    if(this.selected == 'Logout') {
+      this.logout()
+    } else {
+      this.route.navigate([ev.item.route])
+    }
   }
 
   public onExpandChange(): void {
@@ -105,6 +112,20 @@ export class SidebarComponent implements OnInit {
     this.drawer.toggle()
     const state = !this.expanded ? 'mini' : 'expanded';
     this.drawerStateChange.emit(state);
+  }
+
+  public logout() {
+    this.apiRequest.post(API_PREFIX + 'logout', {}).subscribe({
+      next: () => {
+        this.localStorage.deleteAll();
+        this.route.navigate(['/'])
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.localStorage.deleteAll();
+        this.route.navigate(['/'])
+      }
+    })
   }
 
 }

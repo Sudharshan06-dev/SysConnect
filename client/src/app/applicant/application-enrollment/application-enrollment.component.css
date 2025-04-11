@@ -1,0 +1,17 @@
+.display-field {
+  padding: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.expansion-elements {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+
+.k-upload .k-actions {
+  display: none !important;
+}

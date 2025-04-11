@@ -16,7 +16,7 @@
 
       <select formControlName="role" class="input-field">
         <option value="" disabled selected>Select Role</option>
-        <option *ngFor="let role of roleTypes | keyvalue" [value]="role.value">{{ role.value }}</option>
+        <option *ngFor="let role of roleTypes | keyvalue" [value]="role.key">{{ role.value }}</option>
       </select>
       <div *ngIf="signupForm.get('role')?.invalid && signupForm.get('role')?.touched" class="error">{{errors.role}}</div>
 

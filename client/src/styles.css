@@ -37,18 +37,41 @@
 /*Updated Button Colors (Orange Theme) */
 .button {
   width: 100%;
-  padding: 12px;
-  background: #FF7F50; /* Coral color for buttons */
-  border: none;
-  color: white;
-  font-size: 18px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease-in-out;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  font-weight: 500;
 }
 
-button:hover {
-  background: #E67342; /* Slightly darker coral shade */
+/* Submit button */
+.button-submit {
+  background: #FF7F50;
+  color: white;
+}
+
+.button-submit:hover {
+  background: #FF6347;
+  box-shadow: 0 2px 5px rgba(255, 127, 80, 0.3);
+}
+
+.button-submit:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Clear button */
+.button-clear {
+  background: white;
+  color: #555;
+  border-color: #ddd;
+}
+
+.button-clear:hover {
+  background: #f8f8f8;
+  border-color: #ccc;
 }
 
 .link {
@@ -71,4 +94,13 @@ button:hover {
 
 .content {
   transition: margin-left 0.3s ease;
+}
+
+/* Validation messages */
+.error {
+  color: red !important;
+  font-size: 14px !important;
+  height: 16px!important; /* Set fixed height */
+  display: block!important; /* Ensure consistent spacing */
+  margin-bottom: 5px!important;
 }

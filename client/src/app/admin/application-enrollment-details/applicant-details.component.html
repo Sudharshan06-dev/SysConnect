@@ -1,16 +1,95 @@
-<kendo-grid [kendoGridBinding]="gridData"
-            [sortable]="true"
-            [filterable]="true"
-            [filter]="filter"
-            (filterChange)="filterChange($event)"
->
-  <kendo-grid-column field="ReferenceNumber" title="ReferenceNumber"></kendo-grid-column>
-  <kendo-grid-column field="FirstName" title="FirstName"> </kendo-grid-column>
-  <kendo-grid-column field="LastName" title="LastName"> </kendo-grid-column>
-  <kendo-grid-column field="Email" title="Email"> </kendo-grid-column>
-  <kendo-grid-column field="Username" title="Username"> </kendo-grid-column>
-  <kendo-grid-column field="Role" title="Role"> </kendo-grid-column>
-  <kendo-grid-column field="Degree" title="Degree"> </kendo-grid-column>
-  <kendo-grid-column field="Major" title="Major"></kendo-grid-column>
-  <kendo-grid-column field="Status" title="Status"> </kendo-grid-column>
-</kendo-grid>
+<div class="container">
+  <h4 style="text-align: center;" class="mt-2">{{ labels.applications }}</h4>
+
+<kendo-tabstrip>
+  <!-- Pending Tab -->
+  <kendo-tabstrip-tab title="Pending Applications" [selected]="true">
+    <ng-template kendoTabContent>
+      <kendo-grid [kendoGridBinding]="pendingApplications"
+                  [sortable]="true"
+                  [filterable]="true"
+                  [filter]="filter"
+                  (filterChange)="filterChange($event)">
+        <kendo-grid-column field="ReferenceNumber" title="Reference Number"></kendo-grid-column>
+        <kendo-grid-column field="FirstName" title="First Name"></kendo-grid-column>
+        <kendo-grid-column field="LastName" title="Last Name"></kendo-grid-column>
+        <kendo-grid-column field="Email" title="Email"></kendo-grid-column>
+        <kendo-grid-column field="Username" title="Username"></kendo-grid-column>
+        <kendo-grid-column field="Role" title="Role"></kendo-grid-column>
+        <kendo-grid-column field="Degree" title="Degree"></kendo-grid-column>
+        <kendo-grid-column field="Major" title="Major"></kendo-grid-column>
+        <kendo-grid-column field="Status" title="Status" [filterable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="badge bg-warning text-dark">{{ dataItem.Status }}</span>
+          </ng-template>
+        </kendo-grid-column>
+
+        <!-- 🎯 Action Column -->
+        <kendo-grid-column title="Actions" [width]="160">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button class="btn btn-success btn-sm me-1" (click)="approveApplication(dataItem)">
+              Approve
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="rejectApplication(dataItem)">
+              Reject
+            </button>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </ng-template>
+  </kendo-tabstrip-tab>
+
+  <!-- Approved Tab -->
+  <kendo-tabstrip-tab title="Approved">
+    <ng-template kendoTabContent>
+      <kendo-grid
+        [kendoGridBinding]="approvedApplications"
+        [sortable]="true"
+        [filterable]="true"
+        [filter]="filter"
+        (filterChange)="filterChange($event)"
+      >
+        <kendo-grid-column field="ReferenceNumber" title="ReferenceNumber"></kendo-grid-column>
+        <kendo-grid-column field="FirstName" title="FirstName"></kendo-grid-column>
+        <kendo-grid-column field="LastName" title="LastName"></kendo-grid-column>
+        <kendo-grid-column field="Email" title="Email"></kendo-grid-column>
+        <kendo-grid-column field="Username" title="Username"></kendo-grid-column>
+        <kendo-grid-column field="Role" title="Role"></kendo-grid-column>
+        <kendo-grid-column field="Degree" title="Degree"></kendo-grid-column>
+        <kendo-grid-column field="Major" title="Major"></kendo-grid-column>
+        <kendo-grid-column field="Status" title="Status" [filterable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="badge bg-success text-dark">{{ dataItem.Status }}</span>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </ng-template>
+  </kendo-tabstrip-tab>
+
+  <!-- Rejected Tab -->
+  <kendo-tabstrip-tab title="Rejected">
+    <ng-template kendoTabContent>
+      <kendo-grid
+        [kendoGridBinding]="rejectedApplications"
+        [sortable]="true"
+        [filterable]="true"
+        [filter]="filter"
+        (filterChange)="filterChange($event)"
+      >
+        <kendo-grid-column field="ReferenceNumber" title="ReferenceNumber"></kendo-grid-column>
+        <kendo-grid-column field="FirstName" title="FirstName"></kendo-grid-column>
+        <kendo-grid-column field="LastName" title="LastName"></kendo-grid-column>
+        <kendo-grid-column field="Email" title="Email"></kendo-grid-column>
+        <kendo-grid-column field="Username" title="Username"></kendo-grid-column>
+        <kendo-grid-column field="Role" title="Role"></kendo-grid-column>
+        <kendo-grid-column field="Degree" title="Degree"></kendo-grid-column>
+        <kendo-grid-column field="Major" title="Major"></kendo-grid-column>
+        <kendo-grid-column field="Status" title="Status" [filterable]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="badge bg-danger text-dark">{{ dataItem.Status }}</span>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </ng-template>
+  </kendo-tabstrip-tab>
+</kendo-tabstrip>

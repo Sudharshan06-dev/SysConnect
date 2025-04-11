@@ -38,6 +38,17 @@ export class RequestService {
 
   }
 
+  public fileRequest(apiPath: string, requestData: object, config ?: any) {
+
+    const context = config ? this.mergeContexts(...config) : new HttpContext();
+
+    return this.http.post(apiPath, requestData, {
+      headers: {'enctype': 'multipart/form-data'},  // don't use 'Content-Type' manually for FormData
+      context: context
+    });
+
+  }
+
   public get(apiPath: string, config ?: any) {
 
     const context = config ? this.mergeContexts(...config) : new HttpContext();
