@@ -16,8 +16,8 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 #First time entry to the user table => password needs to be hashed
-def get_hashed_password(plain_password: str) -> str:
-    return pwd_context.hash(plain_password)
+#def get_hashed_password(plain_password: str) -> str:
+#    return pwd_context.hash(plain_password)
 
 #User Logs in => Check the hashed password
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -31,6 +31,16 @@ def authenticate_user(username: str, password: str, db: Session) -> Optional[Use
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
+
+def get_hashed_password(plain_password: str) -> str:
+    hashed = pwd_context.hash(plain_password)
+    print(f"Hashing password: {plain_password}, Result: {hashed}")
+    return hashed
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    verified = pwd_context.verify(plain_password, hashed_password)
+    print(f"Verifying password: {plain_password}, Against: {hashed_password}, Result: {verified}")
+    return verified
 
 def create_access_token(data: dict, expires_delta=timedelta(minutes=Envs.AUTH_EXPIRATION)):
     to_encode = data.copy()

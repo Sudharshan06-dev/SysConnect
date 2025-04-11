@@ -21,8 +21,8 @@ async def create_application_user(user_data: CreateUserRequest, db: Session = De
         lastname=user_data.lastname,
         email=user_data.email,
         username=user_data.username,
-        reference_number=uuid4(),
-        application_status=ApplicationStatus.PENDING,
+        #reference_number=uuid4(),
+        #application_status=ApplicationStatus.PENDING,
         hashed_password=hashed_password,
         role=user_data.role
     )

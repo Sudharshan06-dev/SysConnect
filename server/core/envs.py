@@ -11,3 +11,5 @@ class Envs:
     MAIL_FROM = os.getenv('MAIL_FROM')
     MAIL_PORT = int(os.getenv('MAIL_PORT'))
     MAIL_SERVER = os.getenv('MAIL_SERVER')
+
+    print(f"Envs.AUTH_ALGORITHM inside Envs Class: {AUTH_ALGORITHM}") #Add this line.

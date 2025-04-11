@@ -31,7 +31,7 @@ class UserResponse(BaseModel):
     lastname: str
     email: str
     username: str
-    role: RoleType
+    role: str
 
     class Config:
         from_attributes  = True
@@ -50,7 +50,7 @@ class CreateUserRequest(BaseModel):
     email: str
     password: str
     username: str
-    role: RoleType
+    role: str
 
 class ApproveRequest(BaseModel):
     email: EmailStr
